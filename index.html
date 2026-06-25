@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1920" />
+  <title>Panel Informativo — EFA Campomar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── RESET & BASE ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --white:        #ffffff;
+      --off-white:    #f0eee8;
+      --gold:         #f6d32f;        /* color corporativo EFA */
+      --green-corp:   #2d9c2b;        /* color corporativo EFA */
+      --blue-corp:    #1f85cb;        /* color corporativo EFA */
+      --header-h:     90px;
+      --card-radius:  20px;
+      --font-display: 'Oswald', sans-serif;
+      --font-body:    'Inter', sans-serif;
+    }
+
+    html, body {
+      width: 1920px; height: 1080px;
+      overflow: hidden;
+      font-family: var(--font-body);
+      background: #0a0a0f;
+    }
+
+    /* ─── LAYOUT ───────────────────────────────────────────────────── */
+    #app {
+      width: 1920px; height: 1080px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* ─── HEADER ───────────────────────────────────────────────────── */
+    #header {
+      width: 100%;
+      height: var(--header-h);
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(12px);
+      border-bottom: 2px solid rgba(246,211,47,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      position: relative;
+      z-index: 100;
+      flex-shrink: 0;
+    }
+
+    #header-logo {
+      height: 56px;
+      width: auto;
+      object-fit: contain;
+      filter: brightness(1.1);
+    }
+
+    #header-logo-fallback {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    #header-center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+    }
+
+    #header-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 400;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+    }
+
+    #header-subtitle {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    #header-clock {
+      text-align: right;
+    }
+
+    #clock-time {
+      font-family: var(--font-display);
+      font-size: 46px;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1;
+      letter-spacing: 2px;
+    }
+
+    #clock-date {
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.55);
+      text-align: right;
+      margin-top: 2px;
+      letter-spacing: 1px;
+    }
+
+    /* ─── STAGE (where backgrounds + cards live) ───────────────────── */
+    #stage {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ─── BACKGROUND LAYERS ────────────────────────────────────────── */
+    .bg-layer {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 1.2s ease;
+      pointer-events: none;
+    }
+    .bg-layer.active { opacity: 1; }
+
+    /* BG 1: JORNADA — azul marino + líneas geométricas */
+    #bg-jornada {
+      background:
+        linear-gradient(135deg, #05091a 0%, #0c1a3a 40%, #0e2256 70%, #071230 100%);
+    }
+    #bg-jornada::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg,   transparent, transparent 79px, rgba(31,133,203,0.06) 80px),
+        repeating-linear-gradient(90deg,  transparent, transparent 79px, rgba(31,133,203,0.06) 80px),
+        repeating-linear-gradient(-45deg, transparent, transparent 119px, rgba(31,133,203,0.04) 120px);
+    }
+    #bg-jornada::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 900px 600px at 80% 120%, rgba(31,133,203,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 600px 400px at 10% -10%, rgba(246,211,47,0.07) 0%, transparent 50%);
+    }
+
+    /* BG 2: VISITA — verde oscuro + textura sutil */
+    #bg-visita {
+      background:
+        linear-gradient(135deg, #021209 0%, #062a10 40%, #083d16 70%, #041a0b 100%);
+    }
+    #bg-visita::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle 1px at 20px 20px, rgba(45,156,43,0.18) 1px, transparent 0),
+        radial-gradient(circle 1px at 60px 60px, rgba(45,156,43,0.10) 1px, transparent 0);
+      background-size: 80px 80px;
+    }
+    #bg-visita::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 1000px 500px at 85% 110%, rgba(45,156,43,0.15) 0%, transparent 55%),
+        radial-gradient(ellipse 500px 500px at -5% 0%,   rgba(246,211,47,0.06) 0%, transparent 50%);
+    }
+
+    /* BG 3: FESTIVIDAD — ámbar/dorado oscuro + partículas */
+    #bg-festividad {
+      background:
+        linear-gradient(135deg, #150b00 0%, #2d1600 40%, #3d2000 70%, #1a0e00 100%);
+    }
+    #bg-festividad::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle 1.5px at 10% 15%,  rgba(246,211,47,0.2) 0%, transparent 50%),
+        radial-gradient(circle 1px  at 25% 70%,   rgba(246,211,47,0.12) 0%, transparent 50%),
+        radial-gradient(circle 2px  at 45% 30%,   rgba(246,211,47,0.15) 0%, transparent 50%),
+        radial-gradient(circle 1px  at 65% 80%,   rgba(246,211,47,0.12) 0%, transparent 50%),
+        radial-gradient(circle 1.5px at 80% 20%,  rgba(246,211,47,0.18) 0%, transparent 50%),
+        radial-gradient(circle 1px  at 92% 60%,   rgba(246,211,47,0.10) 0%, transparent 50%);
+    }
+    #bg-festividad::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 900px 600px at 80% 110%, rgba(180,100,0,0.18) 0%, transparent 55%),
+        radial-gradient(ellipse 600px 400px at 5% -5%,   rgba(246,211,47,0.08) 0%, transparent 50%);
+    }
+
+    /* Animated floating particles for festividad */
+    .particle {
+      position: absolute;
+      width: 3px; height: 3px;
+      border-radius: 50%;
+      background: rgba(246,211,47,0.5);
+      animation: float-up linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes float-up {
+      0%   { transform: translateY(0px) translateX(0px); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 0.5; }
+      100% { transform: translateY(-300px) translateX(var(--dx, 20px)); opacity: 0; }
+    }
+
+    /* ─── CARD WRAPPER ─────────────────────────────────────────────── */
+    #card-wrapper {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 80px;
+    }
+
+    /* ─── EVENT CARD ───────────────────────────────────────────────── */
+    .event-card {
+      width: 100%;
+      max-width: 1600px;
+      height: 100%;
+      display: grid;
+      grid-template-columns: 1fr 520px;
+      grid-template-rows: 1fr;
+      gap: 0;
+      border-radius: var(--card-radius);
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+      position: absolute;
+    }
+    .event-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+      position: relative;
+    }
+
+    /* No-image layout */
+    .event-card.no-image {
+      grid-template-columns: 1fr;
+    }
+
+    /* Card main content */
+    .card-main {
+      background: rgba(0,0,0,0.52);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-right: none;
+      border-radius: var(--card-radius) 0 0 var(--card-radius);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 52px 64px;
+    }
+
+    .event-card.no-image .card-main {
+      border-right: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--card-radius);
+    }
+
+    /* Card image panel */
+    .card-image {
+      position: relative;
+      overflow: hidden;
+      border-radius: 0 var(--card-radius) var(--card-radius) 0;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-left: none;
+    }
+    .card-image img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: brightness(0.85);
+    }
+    .card-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(0,0,0,0.3) 0%, transparent 40%);
+    }
+
+    /* ─── CARD CONTENT ─────────────────────────────────────────────── */
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .type-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 20px;
+      border-radius: 40px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      border: 1.5px solid currentColor;
+      white-space: nowrap;
+    }
+    .type-badge.jornada    { color: #7ec8f7; border-color: rgba(126,200,247,0.5); background: rgba(126,200,247,0.08); }
+    .type-badge.visita     { color: #7ee87a; border-color: rgba(126,232,122,0.5); background: rgba(126,232,122,0.08); }
+    .type-badge.festividad { color: #f6d32f; border-color: rgba(246,211,47,0.5);  background: rgba(246,211,47,0.08); }
+
+    .today-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 20px;
+      border-radius: 40px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      background: rgba(246,211,47,0.15);
+      border: 1.5px solid rgba(246,211,47,0.6);
+      color: var(--gold);
+      animation: pulse-badge 2.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-badge {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(246,211,47,0); }
+      50%       { box-shadow: 0 0 0 6px rgba(246,211,47,0.1); }
+    }
+
+    .soon-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 20px;
+      border-radius: 40px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.06);
+      border: 1.5px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.55);
+    }
+
+    .card-middle {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 36px 0 20px;
+    }
+
+    .event-title {
+      font-family: var(--font-display);
+      font-size: 62px;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.08;
+      letter-spacing: -0.5px;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+      max-width: 900px;
+    }
+
+    .event-card.no-image .event-title {
+      font-size: 72px;
+      max-width: 1300px;
+    }
+
+    .card-bottom {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px 40px;
+    }
+
+    .info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .info-label {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .info-value {
+      font-family: var(--font-body);
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--white);
+      line-height: 1.2;
+    }
+
+    .info-value.highlight {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .info-value.highlight.jornada    { color: #7ec8f7; }
+    .info-value.highlight.visita     { color: #7ee87a; }
+    .info-value.highlight.festividad { color: #f6d32f; }
+
+    /* ─── PROGRESS BAR ─────────────────────────────────────────────── */
+    #progress-bar {
+      position: absolute;
+      bottom: 0; left: 0;
+      height: 4px;
+      background: rgba(246,211,47,0.7);
+      width: 0%;
+      transition: width linear;
+      z-index: 200;
+    }
+
+    /* ─── DOTS INDICATOR ───────────────────────────────────────────── */
+    #dots {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 200;
+    }
+    .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      transition: background 0.3s, transform 0.3s;
+    }
+    .dot.active {
+      background: var(--gold);
+      transform: scale(1.4);
+    }
+
+    /* ─── LOADING / ERROR STATES ───────────────────────────────────── */
+    #status-screen {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.8);
+      z-index: 300;
+      gap: 24px;
+    }
+
+    #status-screen .status-icon {
+      font-size: 64px;
+    }
+
+    #status-screen .status-text {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: 3px;
+      text-align: center;
+    }
+
+    #status-screen .status-sub {
+      font-family: var(--font-body);
+      font-size: 16px;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 1px;
+      text-align: center;
+      max-width: 600px;
+    }
+
+    .spinner {
+      width: 56px; height: 56px;
+      border: 4px solid rgba(255,255,255,0.1);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ─── DECORATIVE ACCENT LINE ───────────────────────────────────── */
+    .accent-line {
+      width: 80px; height: 3px;
+      margin-bottom: 20px;
+      border-radius: 2px;
+    }
+    .accent-line.jornada    { background: linear-gradient(90deg, #7ec8f7, transparent); }
+    .accent-line.visita     { background: linear-gradient(90deg, #7ee87a, transparent); }
+    .accent-line.festividad { background: linear-gradient(90deg, #f6d32f, transparent); }
+
+    /* ─── ICON UTILITY ─────────────────────────────────────────────── */
+    .icon { display: inline-block; margin-right: 6px; }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HEADER -->
+  <header id="header">
+    <div id="header-brand">
+      <img id="header-logo" src="logo.png" alt="EFA Campomar"
+        onerror="this.style.display='none'; document.getElementById('header-logo-fallback').style.display='block';" />
+      <span id="header-logo-fallback" style="display:none">EFA Campomar</span>
+    </div>
+
+    <div id="header-center">
+      <div id="header-title">Panel de Actividades</div>
+      <div id="header-subtitle">EFA Campomar · Almería</div>
+    </div>
+
+    <div id="header-clock">
+      <div id="clock-time">00:00</div>
+      <div id="clock-date">—</div>
+    </div>
+  </header>
+
+  <!-- STAGE -->
+  <div id="stage">
+
+    <!-- BACKGROUNDS -->
+    <div id="bg-jornada"    class="bg-layer"></div>
+    <div id="bg-visita"     class="bg-layer"></div>
+    <div id="bg-festividad" class="bg-layer"></div>
+
+    <!-- CARDS -->
+    <div id="card-wrapper"></div>
+
+    <!-- PROGRESS BAR -->
+    <div id="progress-bar"></div>
+
+    <!-- DOTS -->
+    <div id="dots"></div>
+
+    <!-- STATUS OVERLAY -->
+    <div id="status-screen">
+      <div class="spinner"></div>
+      <div class="status-text">Cargando actividades...</div>
+    </div>
+
+  </div><!-- /stage -->
+</div><!-- /app -->
+
+<script>
+/* ════════════════════════════════════════════════════════════════════
+   CONFIGURACIÓN — edita estos valores
+   ════════════════════════════════════════════════════════════════════ */
+const CONFIG = {
+  SHEET_ID:  '1WFCWXWSx1zO3lEn_W9Ytd2EROyn_-AKegvoxwQTgXXA',          // ID de tu Google Sheet
+  API_KEY:   'AIzaSyA8BCsYtkxfyLixM18-iSDKm7xkRYws7-A',           // Clave de la API de Google
+  SHEET_TAB: 'Hoja1',                     // Nombre de la pestaña
+  SLIDE_INTERVAL_MS: 10000,               // ms por tarjeta (10 seg)
+  REFRESH_INTERVAL_MS: 5 * 60 * 1000,    // refresco datos (5 min)
+};
+
+/* ════════════════════════════════════════════════════════════════════
+   TIPOS Y CONFIGURACIÓN VISUAL
+   ════════════════════════════════════════════════════════════════════ */
+const TYPE_MAP = {
+  'jornada':    { key: 'jornada',    bg: 'bg-jornada',    icon: '🎓', label: 'Jornada / Charla' },
+  'visita':     { key: 'visita',     bg: 'bg-visita',     icon: '🚌', label: 'Visita' },
+  'festividad': { key: 'festividad', bg: 'bg-festividad',  icon: '🎉', label: 'Festividad / Evento' },
+};
+
+function getTypeConfig(raw) {
+  const s = (raw || '').toLowerCase().trim();
+  if (s.includes('jornada') || s.includes('charla') || s.includes('conferencia')) return TYPE_MAP['jornada'];
+  if (s.includes('visita') || s.includes('feria') || s.includes('empresa'))       return TYPE_MAP['visita'];
+  return TYPE_MAP['festividad'];
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   RELOJ
+   ════════════════════════════════════════════════════════════════════ */
+const DAYS   = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+const MONTHS = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
+function updateClock() {
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2,'0');
+  const mm = String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('clock-time').textContent = `${hh}:${mm}`;
+  document.getElementById('clock-date').textContent =
+    `${DAYS[now.getDay()]}, ${now.getDate()} de ${MONTHS[now.getMonth()]} de ${now.getFullYear()}`;
+}
+
+setInterval(updateClock, 1000);
+updateClock();
+
+/* ════════════════════════════════════════════════════════════════════
+   LÓGICA DE FECHAS
+   ════════════════════════════════════════════════════════════════════ */
+function parseDate(str) {
+  // Acepta DD/MM/YYYY o YYYY-MM-DD
+  if (!str) return null;
+  const parts = str.includes('/') ? str.split('/') : str.split('-').reverse();
+  if (parts.length !== 3) return null;
+  const [d, m, y] = parts.map(Number);
+  return new Date(y, m - 1, d);
+}
+
+function toMidnight(date) {
+  const d = new Date(date);
+  d.setHours(0,0,0,0);
+  return d;
+}
+
+/**
+ * Regla de negocio:
+ *  - Un evento con fecha X se muestra desde las 00:00 del día siguiente al evento anterior
+ *    hasta las 23:59 del día X.
+ *  - Ordenamos los eventos por fecha. El evento "activo" es el de fecha más próxima
+ *    cuyo día aún no haya terminado (< 00:00 del día X+1).
+ */
+function selectActiveEvents(events) {
+  const today = toMidnight(new Date());
+
+  // Filtrar solo eventos futuros o de hoy
+  const upcoming = events
+    .filter(e => {
+      const d = parseDate(e.fecha);
+      if (!d) return false;
+      const dayAfter = new Date(toMidnight(d).getTime() + 24*60*60*1000);
+      return new Date() < dayAfter; // hasta las 23:59 del día del evento
+    })
+    .sort((a, b) => parseDate(a.fecha) - parseDate(b.fecha));
+
+  if (!upcoming.length) return [];
+
+  // Tomar la fecha más próxima
+  const nextDate = toMidnight(parseDate(upcoming[0].fecha));
+  // Todos los eventos de esa fecha
+  return upcoming.filter(e => toMidnight(parseDate(e.fecha)).getTime() === nextDate.getTime());
+}
+
+function isToday(dateStr) {
+  const d = parseDate(dateStr);
+  if (!d) return false;
+  const t = toMidnight(new Date());
+  return toMidnight(d).getTime() === t.getTime();
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   GOOGLE SHEETS API
+   ════════════════════════════════════════════════════════════════════ */
+async function fetchEvents() {
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.SHEET_ID}/values/${encodeURIComponent(CONFIG.SHEET_TAB)}?key=${CONFIG.API_KEY}`;
+  const resp = await fetch(url);
+  if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+  const data = await resp.json();
+  const rows = data.values || [];
+  if (rows.length < 2) return [];
+
+  // Primera fila como cabeceras (insensible a mayúsculas/tildes)
+  const headers = rows[0].map(h => h.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .trim()
+  );
+
+  const idx = (name) => headers.findIndex(h => h.includes(name));
+  const iId      = idx('id');
+  const iTitulo  = idx('titul');
+  const iTipo    = idx('tipo');
+  const iFecha   = idx('fecha');
+  const iHora    = idx('hora');
+  const iLugar   = idx('lugar');
+  const iDirig   = idx('dirig');
+  const iImagen  = idx('imagen');
+
+  return rows.slice(1).map(row => ({
+    id:      row[iId]     || '',
+    titulo:  row[iTitulo] || '',
+    tipo:    row[iTipo]   || '',
+    fecha:   row[iFecha]  || '',
+    hora:    row[iHora]   || '',
+    lugar:   row[iLugar]  || '',
+    dirigido:row[iDirig]  || '',
+    imagen:  row[iImagen] || '',
+  })).filter(e => e.titulo && e.fecha);
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   RENDER
+   ════════════════════════════════════════════════════════════════════ */
+function formatDateLong(str) {
+  const d = parseDate(str);
+  if (!d) return str;
+  return `${d.getDate()} de ${MONTHS[d.getMonth()]} de ${d.getFullYear()}`;
+}
+
+function buildCard(event) {
+  const tc       = getTypeConfig(event.tipo);
+  const today    = isToday(event.fecha);
+  const hasImage = event.imagen && event.imagen.trim() !== '';
+
+  const card = document.createElement('div');
+  card.className = `event-card${hasImage ? '' : ' no-image'}`;
+
+  // Determine badge
+  const badgeHTML = today
+    ? `<span class="today-badge"><span class="icon">📅</span> HOY</span>`
+    : `<span class="soon-badge"><span class="icon">📌</span> Próximamente</span>`;
+
+  const imageHTML = hasImage ? `
+    <div class="card-image">
+      <img src="${event.imagen}" alt="${event.titulo}"
+        onerror="this.closest('.card-image').style.display='none'; this.closest('.event-card').classList.add('no-image'); this.closest('.event-card').querySelector('.card-main').style.borderRadius='20px'; this.closest('.event-card').querySelector('.card-main').style.borderRight='1px solid rgba(255,255,255,0.08)';" />
+    </div>` : '';
+
+  card.innerHTML = `
+    <div class="card-main">
+      <div class="card-top">
+        <span class="type-badge ${tc.key}">
+          <span class="icon">${tc.icon}</span>${tc.label}
+        </span>
+        ${badgeHTML}
+      </div>
+      <div class="card-middle">
+        <div class="accent-line ${tc.key}"></div>
+        <h1 class="event-title">${event.titulo}</h1>
+      </div>
+      <div class="card-bottom">
+        <div class="info-item">
+          <span class="info-label">📅 &nbsp;Fecha</span>
+          <span class="info-value highlight ${tc.key}">${formatDateLong(event.fecha)}</span>
+        </div>
+        ${event.hora ? `<div class="info-item">
+          <span class="info-label">🕐 &nbsp;Horario</span>
+          <span class="info-value highlight ${tc.key}">${event.hora}</span>
+        </div>` : ''}
+        ${event.lugar ? `<div class="info-item">
+          <span class="info-label">📍 &nbsp;Lugar</span>
+          <span class="info-value">${event.lugar}</span>
+        </div>` : ''}
+        ${event.dirigido ? `<div class="info-item">
+          <span class="info-label">👥 &nbsp;Dirigido a</span>
+          <span class="info-value">${event.dirigido}</span>
+        </div>` : ''}
+      </div>
+    </div>
+    ${imageHTML}
+  `;
+
+  return { card, tc };
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   CARRUSEL
+   ════════════════════════════════════════════════════════════════════ */
+let carousel = {
+  events: [],
+  current: 0,
+  timer: null,
+  progressTimer: null,
+};
+
+function setBackground(typeKey) {
+  document.querySelectorAll('.bg-layer').forEach(l => l.classList.remove('active'));
+  const bgId = TYPE_MAP[typeKey]?.bg || 'bg-jornada';
+  const bgEl = document.getElementById(bgId);
+  if (bgEl) bgEl.classList.add('active');
+
+  // Manage festividad particles
+  document.querySelectorAll('.particle').forEach(p => p.remove());
+  if (typeKey === 'festividad') {
+    const stage = document.getElementById('bg-festividad');
+    for (let i = 0; i < 18; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.cssText = `
+        left: ${Math.random()*100}%;
+        bottom: ${Math.random()*30}%;
+        width: ${1+Math.random()*3}px;
+        height: ${1+Math.random()*3}px;
+        animation-duration: ${5+Math.random()*8}s;
+        animation-delay: ${-Math.random()*8}s;
+        --dx: ${(Math.random()-0.5)*80}px;
+        opacity: ${0.3+Math.random()*0.5};
+      `;
+      stage.appendChild(p);
+    }
+  }
+}
+
+function updateDots(count, active) {
+  const dotsEl = document.getElementById('dots');
+  dotsEl.innerHTML = '';
+  if (count <= 1) return;
+  for (let i = 0; i < count; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === active ? ' active' : '');
+    dotsEl.appendChild(d);
+  }
+}
+
+function startProgress(durationMs) {
+  const bar = document.getElementById('progress-bar');
+  bar.style.transition = 'none';
+  bar.style.width = '0%';
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      bar.style.transition = `width ${durationMs}ms linear`;
+      bar.style.width = '100%';
+    });
+  });
+}
+
+function showSlide(index) {
+  const wrapper = document.getElementById('card-wrapper');
+  const events  = carousel.events;
+  if (!events.length) return;
+
+  carousel.current = index % events.length;
+  const event = events[carousel.current];
+  const { card, tc } = buildCard(event);
+
+  // Remove old card
+  const old = wrapper.querySelector('.event-card');
+  if (old) {
+    old.style.opacity = '0';
+    old.style.transform = 'translateY(-16px)';
+    setTimeout(() => old.remove(), 700);
+  }
+
+  wrapper.appendChild(card);
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => card.classList.add('visible'));
+  });
+
+  setBackground(tc.key);
+  updateDots(events.length, carousel.current);
+
+  if (events.length > 1) {
+    startProgress(CONFIG.SLIDE_INTERVAL_MS);
+  } else {
+    document.getElementById('progress-bar').style.width = '0%';
+  }
+}
+
+function startCarousel(events) {
+  carousel.events = events;
+  carousel.current = 0;
+
+  clearInterval(carousel.timer);
+  showSlide(0);
+
+  if (events.length > 1) {
+    carousel.timer = setInterval(() => {
+      showSlide(carousel.current + 1);
+    }, CONFIG.SLIDE_INTERVAL_MS);
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   ESTADO SIN EVENTOS
+   ════════════════════════════════════════════════════════════════════ */
+function showNoEvents() {
+  const status = document.getElementById('status-screen');
+  status.innerHTML = `
+    <div class="status-icon">📋</div>
+    <div class="status-text">No hay actividades próximas</div>
+    <div class="status-sub">Cuando se programen nuevas actividades aparecerán aquí automáticamente.</div>
+  `;
+  status.style.display = 'flex';
+  document.getElementById('bg-jornada').classList.add('active');
+}
+
+function showError(msg) {
+  const status = document.getElementById('status-screen');
+  status.innerHTML = `
+    <div class="status-icon">⚠️</div>
+    <div class="status-text">Error al cargar los datos</div>
+    <div class="status-sub">${msg}</div>
+  `;
+  status.style.display = 'flex';
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   INIT
+   ════════════════════════════════════════════════════════════════════ */
+async function loadAndRender() {
+  try {
+    const allEvents    = await fetchEvents();
+    const activeEvents = selectActiveEvents(allEvents);
+    const status       = document.getElementById('status-screen');
+
+    if (!activeEvents.length) {
+      status.style.display = 'flex';
+      showNoEvents();
+      return;
+    }
+
+    status.style.display = 'none';
+    startCarousel(activeEvents);
+
+  } catch (err) {
+    console.error(err);
+    showError(`No se pudo conectar con Google Sheets.<br><small>${err.message}</small>`);
+  }
+}
+
+// Primera carga
+loadAndRender();
+
+// Refresco periódico de datos
+setInterval(loadAndRender, CONFIG.REFRESH_INTERVAL_MS);
+
+// Refresco en cambio de día (cada minuto comprueba si ha cambiado el día)
+let lastDay = new Date().getDate();
+setInterval(() => {
+  const today = new Date().getDate();
+  if (today !== lastDay) {
+    lastDay = today;
+    loadAndRender();
+  }
+}, 60000);
+</script>
+</body>
+</html>
