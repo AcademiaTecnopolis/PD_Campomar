@@ -547,6 +547,29 @@ function setBg(typeKey) {
   }
 }
 
+/* ══ RESOLVE IMAGE URL ══
+   Acepta cualquiera de estos formatos que pegue el usuario:
+   1. https://drive.google.com/file/d/ID/view?usp=sharing   ← enlace compartido estándar
+   2. https://drive.google.com/open?id=ID
+   3. https://drive.google.com/uc?export=view&id=ID         ← ya es directa, la deja igual
+   4. Cualquier otra URL (web externa, GitHub, etc.)         ← la deja igual
+══ */
+function resolveImageUrl(url) {
+  if (!url) return url;
+  url = url.trim();
+
+  // Formato 1: /file/d/ID/view...
+  const m1 = url.match(/\/file\/d\/([^\/\?&]+)/);
+  if (m1) return `https://drive.google.com/uc?export=view&id=${m1[1]}`;
+
+  // Formato 2: open?id=ID
+  const m2 = url.match(/[?&]id=([^&]+)/);
+  if (m2 && url.includes('drive.google.com')) return `https://drive.google.com/uc?export=view&id=${m2[1]}`;
+
+  // Cualquier otra URL: devolver tal cual
+  return url;
+}
+
 /* ══ RENDER EVENT ══ */
 function renderEvent(ev) {
   const tc = getType(ev.tipo);
@@ -604,7 +627,7 @@ function renderEvent(ev) {
   const img         = document.getElementById('event-img');
   const placeholder = document.getElementById('no-image-placeholder');
   if (ev.imagen) {
-    img.src           = ev.imagen;
+    img.src           = resolveImageUrl(ev.imagen);
     img.style.display = 'block';
     placeholder.style.display='none';
     img.onerror = ()=>{ img.style.display='none'; placeholder.style.display='flex'; };
