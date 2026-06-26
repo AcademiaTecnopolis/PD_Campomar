@@ -493,7 +493,8 @@ function selectNext(events, activeDate) {
 
 /* ══ GOOGLE SHEETS ══ */
 async function fetchEvents() {
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.SHEET_ID}/values/${encodeURIComponent(CONFIG.SHEET_TAB)}?key=${CONFIG.API_KEY}`;
+  // valueRenderOption=FORMULA devuelve las URLs reales de los hipervínculos
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.SHEET_ID}/values/${encodeURIComponent(CONFIG.SHEET_TAB)}?key=${CONFIG.API_KEY}&valueRenderOption=FORMULA`;
   const r = await fetch(url);
   if (!r.ok) throw new Error(`HTTP ${r.status}`);
   const data = await r.json();
@@ -515,18 +516,25 @@ async function fetchEvents() {
   const iMas   = idx('mas') !== -1 ? idx('mas') : idx('informaci');
   const iImg   = idx('imagen');
 
-  return rows.slice(1).map(row=>({
-    id:       row[iId]    ||'',
-    titulo:   row[iTit]   ||'',
-    tipo:     row[iTipo]  ||'',
-    fecha:    row[iFecha] ||'',
-    hora:     row[iHora]  ||'',
-    lugar:    row[iLugar] ||'',
-    dirigido: row[iDir]   ||'',
-    ultimaHora: iUlt>=0 ? (row[iUlt]||'') : '',
-    masInfo:  iMas>=0 ? (row[iMas]||'') : '',
-    imagen:   iImg>=0 ? (row[iImg]||'') : '',
-  })).filter(e=>e.titulo&&e.fecha);
+  return rows.slice(1).map(row=>{
+    // Si la celda imagen es una fórmula HYPERLINK("url","texto"), extraemos la url
+    let imagen = iImg>=0 ? (row[iImg]||'') : '';
+    const hypMatch = imagen.match(/=?HYPERLINK\("([^"]+)"/i);
+    if (hypMatch) imagen = hypMatch[1];
+
+    return {
+      id:        row[iId]    ||'',
+      titulo:    row[iTit]   ||'',
+      tipo:      row[iTipo]  ||'',
+      fecha:     row[iFecha] ||'',
+      hora:      row[iHora]  ||'',
+      lugar:     row[iLugar] ||'',
+      dirigido:  row[iDir]   ||'',
+      ultimaHora: iUlt>=0 ? (row[iUlt]||'') : '',
+      masInfo:   iMas>=0 ? (row[iMas]||'') : '',
+      imagen,
+    };
+  }).filter(e=>e.titulo&&e.fecha);
 }
 
 /* ══ BACKGROUND ══ */
@@ -558,13 +566,23 @@ function resolveImageUrl(url) {
   if (!url) return url;
   url = url.trim();
 
+  // Extraer ID de cualquier formato de URL de Google Drive
+  let driveId = null;
+
   // Formato 1: /file/d/ID/view...
   const m1 = url.match(/\/file\/d\/([^\/\?&]+)/);
-  if (m1) return `https://drive.google.com/uc?export=view&id=${m1[1]}`;
+  if (m1) driveId = m1[1];
 
-  // Formato 2: open?id=ID
-  const m2 = url.match(/[?&]id=([^&]+)/);
-  if (m2 && url.includes('drive.google.com')) return `https://drive.google.com/uc?export=view&id=${m2[1]}`;
+  // Formato 2: open?id=ID  o  uc?id=ID
+  if (!driveId) {
+    const m2 = url.match(/[?&]id=([^&]+)/);
+    if (m2 && url.includes('drive.google.com')) driveId = m2[1];
+  }
+
+  if (driveId) {
+    // thumbnail funciona sin restricciones CORS y admite imágenes grandes
+    return `https://drive.google.com/thumbnail?id=${driveId}&sz=w1200`;
+  }
 
   // Cualquier otra URL: devolver tal cual
   return url;
