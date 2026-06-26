@@ -501,7 +501,7 @@ async function fetchEvents() {
   const rows = data.values||[];
   if (rows.length<2) return [];
 
-  const norm = h=>h.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+  const norm = h => String(h||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
   const hdrs = rows[0].map(norm);
   const idx  = name=>hdrs.findIndex(h=>h.includes(name));
 
@@ -516,22 +516,23 @@ async function fetchEvents() {
   const iMas   = idx('mas') !== -1 ? idx('mas') : idx('informaci');
   const iImg   = idx('imagen');
 
+  const str = v => (v === undefined || v === null) ? '' : String(v).trim();
+
   return rows.slice(1).map(row=>{
-    // Si la celda imagen es una fórmula HYPERLINK("url","texto"), extraemos la url
-    let imagen = iImg>=0 ? (row[iImg]||'') : '';
+    let imagen = iImg>=0 ? str(row[iImg]) : '';
     const hypMatch = imagen.match(/=?HYPERLINK\("([^"]+)"/i);
     if (hypMatch) imagen = hypMatch[1];
 
     return {
-      id:        row[iId]    ||'',
-      titulo:    row[iTit]   ||'',
-      tipo:      row[iTipo]  ||'',
-      fecha:     row[iFecha] ||'',
-      hora:      row[iHora]  ||'',
-      lugar:     row[iLugar] ||'',
-      dirigido:  row[iDir]   ||'',
-      ultimaHora: iUlt>=0 ? (row[iUlt]||'') : '',
-      masInfo:   iMas>=0 ? (row[iMas]||'') : '',
+      id:         str(row[iId]),
+      titulo:     str(row[iTit]),
+      tipo:       str(row[iTipo]),
+      fecha:      str(row[iFecha]),
+      hora:       str(row[iHora]),
+      lugar:      str(row[iLugar]),
+      dirigido:   str(row[iDir]),
+      ultimaHora: iUlt>=0 ? str(row[iUlt]) : '',
+      masInfo:    iMas>=0 ? str(row[iMas]) : '',
       imagen,
     };
   }).filter(e=>e.titulo&&e.fecha);
