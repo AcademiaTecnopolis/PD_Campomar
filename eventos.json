@@ -2,14 +2,14 @@
   {
     "id": 1,
     "titulo": "Visita a Infoagro",
-    "parrafo": "El alumnado de los ciclos de Agronomía visitará la feria internacional Infoagro Exhibition, referente del sector agrícola en Europa.",
+    "parrafo": "El alumnado de los ciclos de AgronomÃ­a visitarÃ¡ la feria internacional Infoagro Exhibition, referente del sector agrÃ­cola en Europa.",
     "tipo": "Visita",
-    "fecha": "10/07/2026",
+    "fecha": "28/06/2026",
     "hora": "7:00",
-    "lugar": "Puerta Principal (Autobús)",
+    "lugar": "Puerta Principal (AutobÃºs)",
     "dirigido": "Todos los ciclos",
-    "ultimaHora": "Llevar documentación",
+    "ultimaHora": "Llevar documentaciÃ³n",
     "masInfo": "Salida puntual. Llevar bocadillo y agua.",
-    "imagen": ""
+    "imagen": "imagenes/imagen1.jpg"
   }
 ]
