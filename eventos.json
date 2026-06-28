@@ -13,6 +13,19 @@
     "imagen": "imagenes/imagen2.jpg"
   },
   {
+    "id": 3,
+    "titulo": "Feria Internacional de Automoción en Aguadulce",
+    "parrafo": "Una feria de automoción (o salón del automóvil) es un evento público o profesional donde marcas, concesionarios y empresas del sector del motor se reúnen para exhibir sus vehículos, prototipos y tecnologías. Su objetivo principal es concentrar la oferta del mercado en un solo lugar para facilitar la comparación y la compra.",
+    "tipo": "Visita",
+    "fecha": "30/06/2026",
+    "hora": "09:00 - 14:00",
+    "lugar": "Palacio de Congresos Aguadulce",
+    "dirigido": "Alumnos de EVA y Automoción",
+    "ultimaHora": "Llevaros bocadillo que comes allí",
+    "masInfo": "Iremos en autobús",
+    "imagen": "imagenes/imagen4.jpg"
+  },
+  {
     "id": 1,
     "titulo": "Visita a Infoagro",
     "parrafo": "El alumnado de los ciclos de AgronomÃ­a visitarÃ¡ la feria internacional Infoagro Exhibition, referente del sector agrÃ­Â­cola en Europa.",
