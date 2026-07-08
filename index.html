@@ -310,7 +310,9 @@
     }
     /* image zoom-in on load */
     #event-img {
-      width: 100%; height: 100%; object-fit: cover; display: none;
+      /*CAMBIO DE AJUSTE DE LA IMAGEN A LA VENTANA*/
+      /*width: 100%; height: 100%; object-fit: cover; display: none;*/
+      width: 100%; height: 100%; object-fit: contain; display: none;
       animation: img-zoom 12s ease-in-out infinite alternate;
     }
     @keyframes img-zoom {
