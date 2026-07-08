@@ -1,23 +1,23 @@
 [
   {
-    "id": 2,
-    "titulo": "DÃ­a de la Mujer Agraria",
-    "parrafo": "Las mujeres representan el 26,2 % del empleo agrario en EspaÃ±a. Su rol es vital para el desarrollo local, combinando la producciÃ³n de alimentos con el emprendimiento rural y el cuidado familiar, a menudo enfrentando retos como el relevo generacional y la conciliaciÃ³n",
+    "id": 1,
+    "titulo": "Dí­a de la Mujer Agraria",
+    "parrafo": "Las mujeres representan el 26,2 % del empleo agrario en España. Su rol es vital para el desarrollo local, combinando la producción de alimentos con el emprendimiento rural y el cuidado familiar, a menudo enfrentando retos como el relevo generacional y la conciliaciÃ³n",
     "tipo": "Jornada",
-    "fecha": "28/06/2026",
+    "fecha": "09/07/2026",
     "hora": "10:00 - 12:00",
-    "lugar": "SalÃ³n de Actos EFA Campomar",
+    "lugar": "Salón de Actos EFA Campomar",
     "dirigido": "Todo el alumnado",
     "ultimaHora": "haremos un refresco",
     "masInfo": "Vamos a ir todos y todas",
     "imagen": "imagenes/imagen2.jpg"
   },
   {
-    "id": 3,
+    "id": 2,
     "titulo": "Feria Internacional de Automoción en Aguadulce",
     "parrafo": "Una feria de automoción (o salón del automóvil) es un evento público o profesional donde marcas, concesionarios y empresas del sector del motor se reúnen para exhibir sus vehículos, prototipos y tecnologías. Su objetivo principal es concentrar la oferta del mercado en un solo lugar para facilitar la comparación y la compra.",
     "tipo": "Visita",
-    "fecha": "29/06/2026",
+    "fecha": "10/07/2026",
     "hora": "09:00 - 14:00",
     "lugar": "Palacio de Congresos Aguadulce",
     "dirigido": "Alumnos de EVA y Automoción",
@@ -26,15 +26,15 @@
     "imagen": "imagenes/imagen4.jpg"
   },
   {
-    "id": 1,
+    "id": 3,
     "titulo": "Visita a Infoagro",
-    "parrafo": "El alumnado de los ciclos de AgronomÃ­a visitarÃ¡ la feria internacional Infoagro Exhibition, referente del sector agrÃ­Â­cola en Europa.",
+    "parrafo": "El alumnado de los ciclos de AgronomÃ­a visitarÃ¡ la feria internacional Infoagro Exhibition, referente del sector agrí­cola en Europa.",
     "tipo": "Visita",
-    "fecha": "30/07/2026",
+    "fecha": "10/07/2026",
     "hora": "7:00",
-    "lugar": "Puerta Principal (AutobÃºs)",
+    "lugar": "Puerta Principal (Autobús)",
     "dirigido": "Todos los ciclos",
-    "ultimaHora": "Llevar documentaciÃ³n",
+    "ultimaHora": "Llevar documentación",
     "masInfo": "Salida puntual. Llevar bocadillo y agua.",
     "imagen": "imagenes/iamgen5.jpg"
   }
