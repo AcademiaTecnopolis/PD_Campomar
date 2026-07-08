@@ -10,7 +10,7 @@
     "dirigido": "Todo el alumnado",
     "ultimaHora": "haremos un refresco",
     "masInfo": "Vamos a ir todos y todas",
-    "imagen": "imagenes/imagen2.jpg"
+    "imagen": "imagenes/imagen1.jpg"
   },
   {
     "id": 2,
@@ -28,7 +28,7 @@
   {
     "id": 3,
     "titulo": "Visita a Infoagro",
-    "parrafo": "El alumnado de los ciclos de AgronomÃ­a visitarÃ¡ la feria internacional Infoagro Exhibition, referente del sector agrí­cola en Europa.",
+    "parrafo": "El alumnado de los ciclos de Agronomí­a visitará la feria internacional Infoagro Exhibition, referente del sector agrí­cola en Europa.",
     "tipo": "Visita",
     "fecha": "10/07/2026",
     "hora": "7:00",
@@ -36,6 +36,6 @@
     "dirigido": "Todos los ciclos",
     "ultimaHora": "Llevar documentación",
     "masInfo": "Salida puntual. Llevar bocadillo y agua.",
-    "imagen": "imagenes/iamgen5.jpg"
+    "imagen": "imagenes/iamgen2.jpg"
   }
 ]
